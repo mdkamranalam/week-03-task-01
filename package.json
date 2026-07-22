@@ -1,7 +1,7 @@
 {
-  "name": "task_01",
+  "name": "task-crud-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Task CRUD API using Express and SQLite",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mdkamranalam/week-02-task-01.git"
+    "url": "git+https://github.com/mdkamranalam/week-03-task-01.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/mdkamranalam/week-02-task-01/issues"
+    "url": "https://github.com/mdkamranalam/week-03-task-01/issues"
   },
-  "homepage": "https://github.com/mdkamranalam/week-02-task-01#readme",
+  "homepage": "https://github.com/mdkamranalam/week-03-task-01#readme",
   "dependencies": {
     "better-sqlite3": "^13.0.1",
     "express": "^5.2.1"
