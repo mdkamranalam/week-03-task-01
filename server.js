@@ -6,8 +6,49 @@ const app = express();
 
 app.use(express.json());
 
+/**
+ * GET /
+ */
 app.get("/", (req, res) => {
   res.json({ message: "Task API is running." });
+});
+
+/**
+ * GET /tasks - Return all tasks
+ */
+app.get("/tasks", (req, res) => {
+  try {
+    const tasks = db.prepare("SELECT * FROM tasks").all();
+    const formattedTasks = tasks.map((task) => ({
+      ...task,
+      completed: Boolean(task.completed),
+    }));
+
+    res.status(200).json(formattedTasks);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve tasks." });
+  }
+});
+
+/**
+ * GET /tasks/:id - Return a specific task by ID
+ */
+app.get("/tasks/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  try {
+    const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(id);
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found." });
+    }
+
+    task.completed = Boolean(task.completed);
+
+    res.status(200).json(task);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve the task." });
+  }
 });
 
 app.listen(PORT, () => {
