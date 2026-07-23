@@ -17,17 +17,19 @@ app.get("/", (req, res) => {
  * GET /tasks - Return all tasks
  */
 app.get("/tasks", (req, res) => {
-  const {search} = req.query;
+  const { search } = req.query;
 
   try {
     let tasks;
 
     if (search) {
-      tasks = db.prepare(`SELECT * FROM tasks WHERE title LIKE ?`).all(`%${search}%`);
+      tasks = db
+        .prepare(`SELECT * FROM tasks WHERE title LIKE ?`)
+        .all(`%${search}%`);
     } else {
       tasks = db.prepare(`SELECT * FROM tasks`).all();
     }
-    
+
     const formattedTasks = tasks.map((task) => ({
       ...task,
       completed: Boolean(task.completed),
@@ -57,6 +59,29 @@ app.get("/tasks/:id", (req, res) => {
     res.status(200).json(task);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve the task." });
+  }
+});
+
+/**
+ * GET /stats - Return task statistics
+ */
+app.get("/stats", (req, res) => {
+  try {
+    const total = db.prepare(`SELECT COUNT(*) AS count FROM tasks`).get();
+    const completed = db
+      .prepare(`SELECT COUNT(*) AS count FROM tasks WHERE completed = 1`)
+      .get();
+    const pending = db
+      .prepare(`SELECT COUNT(*) AS count FROM tasks WHERE completed = 0`)
+      .get();
+
+    res.status(200).json({
+      totalTasks: total.count,
+      completedTasks: completed.count,
+      pendingTasks: pending.count,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve statistics." });
   }
 });
 

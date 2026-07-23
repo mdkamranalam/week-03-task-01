@@ -207,6 +207,30 @@ The endpoint uses SQLite's `LIKE` operator with a parameterized query to filter 
 
 ---
 
+## Statistics Endpoint
+
+Retrieve task statistics.
+
+**Endpoint**
+
+```
+GET /stats
+```
+
+**Example Response**
+
+```json
+{
+  "totalTasks": 5,
+  "completedTasks": 2,
+  "pendingTasks": 3
+}
+```
+
+The endpoint uses SQLite's `COUNT(*)` function to calculate statistics directly from the database.
+
+___
+
 ## AI vs Me
 
 ### AI Prompt
