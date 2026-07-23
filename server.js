@@ -51,6 +51,36 @@ app.get("/tasks/:id", (req, res) => {
   }
 });
 
+/**
+ * POST /tasks - Create a new task
+ */
+app.post("/tasks", (req, res) => {
+  const { title, completed = false } = req.body;
+
+  if (!title || typeof title !== "string") {
+    return res.status(400).json({ error: "Title is required." });
+  }
+
+  try {
+    const result = db
+      .prepare(
+        `INSERT INTO tasks (title, completed)
+                VALUES (?, ?)`,
+      )
+      .run(title, completed ? 1 : 0);
+
+    const newTask = db
+      .prepare(`SELECT * FROM tasks WHERE id = ?`)
+      .get(result.lastInsertRowid);
+
+    newTask.completed = Boolean(newTask.completed);
+
+    res.status(200).json(newTask);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create the task." });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
