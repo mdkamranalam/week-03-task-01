@@ -17,8 +17,17 @@ app.get("/", (req, res) => {
  * GET /tasks - Return all tasks
  */
 app.get("/tasks", (req, res) => {
+  const {search} = req.query;
+
   try {
-    const tasks = db.prepare("SELECT * FROM tasks").all();
+    let tasks;
+
+    if (search) {
+      tasks = db.prepare(`SELECT * FROM tasks WHERE title LIKE ?`).all(`%${search}%`);
+    } else {
+      tasks = db.prepare(`SELECT * FROM tasks`).all();
+    }
+    
     const formattedTasks = tasks.map((task) => ({
       ...task,
       completed: Boolean(task.completed),

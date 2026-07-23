@@ -195,6 +195,18 @@ WHERE id = ?;
 
 ---
 
+## Search Endpoint
+
+You can search tasks by title.
+
+Example:
+
+GET /tasks?search=learn
+
+The endpoint uses SQLite's `LIKE` operator with a parameterized query to filter matching task titles.
+
+---
+
 ## AI vs Me
 
 ### AI Prompt
