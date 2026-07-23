@@ -80,6 +80,60 @@ app.post("/tasks", (req, res) => {
     res.status(500).json({ error: "Failed to create the task." });
   }
 });
+/**
+ * PUT /tasks/:id - Update an existing task
+ */
+app.put("/tasks/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const { title, completed } = req.body;
+
+  const existingTask = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id);
+
+  if (!existingTask) {
+    return res.status(404).json({ error: "Task not found." });
+  }
+
+  const updatedTitle = title !== undefined ? title : existingTask.title;
+  const updatedCompleted =
+    completed !== undefined ? (completed ? 1 : 0) : existingTask.completed;
+
+  try {
+    db.prepare(
+      `UPDATE tasks
+            SET title = ?, completed = ?
+            WHERE id = ?`,
+    ).run(updatedTitle, updatedCompleted, id);
+
+    const updatedTask = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id);
+
+    updatedTask.completed = Boolean(updatedTask.completed);
+
+    res.status(200).json(updatedCompleted);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update the task." });
+  }
+});
+
+/**
+ * DELETE /tasks/:id - Delete a task
+ */
+app.delete("/tasks/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const existingTask = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id);
+
+  if (!existingTask) {
+    return res.status(404).json({ error: "Task not found." });
+  }
+
+  try {
+    db.prepare(`DELETE FROM tasks WHERE id = ?`).run(id);
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete the task." });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
