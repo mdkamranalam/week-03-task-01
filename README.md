@@ -195,6 +195,34 @@ WHERE id = ?;
 
 ---
 
+## AI vs Me
+
+### AI Prompt
+
+(Paste the complete prompt you used.)
+
+### What AI Did Better
+
+- Organized the code into clear sections with descriptive comments.
+- Used parameterized SQL queries consistently.
+- Reduced duplicated SQL logic.
+
+### What AI Got Wrong
+
+- Changed some response messages compared to my implementation.
+- Made assumptions about validation that were not specified.
+- Structured the project differently than my original solution.
+
+### What My Prompt Forgot
+
+I did not clearly specify how partial updates should behave or that the API responses should exactly match my original implementation. Because of that, the AI made some reasonable but different design choices.
+
+### Prompt Improvement
+
+I refined my prompt by explicitly requiring identical API behavior, validation rules, and response formats. The regenerated version followed the requirements more accurately.
+
+---
+
 ## Author
 
 Md. Kamran Alam
